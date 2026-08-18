@@ -4,8 +4,42 @@ public class Main {
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
             System.out.println("TIC-TAC-TOE");
-            System.out.println();
 
+            if (readStartupMenu(scanner) == SessionAction.NEW_GAME) {
+                runGameSessions(scanner);
+            }
+
+            System.out.println("Thanks for playing!");
+        }
+    }
+
+    private static SessionAction readStartupMenu(Scanner scanner) {
+        while (scanner.hasNextLine()) {
+            System.out.println();
+            System.out.println("[N] Start a new game");
+            System.out.println("[Q] Quit");
+            System.out.print("Choose an option: ");
+
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("N")) {
+                return SessionAction.NEW_GAME;
+            }
+
+            if (input.equalsIgnoreCase("Q")) {
+                return SessionAction.QUIT;
+            }
+
+            System.out.println("Enter N to start or Q to quit.");
+        }
+
+        return SessionAction.QUIT;
+    }
+
+    private static void runGameSessions(Scanner scanner) {
+        playerSessions:
+        while (true) {
+            System.out.println();
             Player playerOne = registerPlayer(scanner, "Player 1", 'X', null);
             Player playerTwo = registerPlayer(
                     scanner,
@@ -17,23 +51,54 @@ public class Main {
             System.out.println("Players:");
             displayPlayer(playerOne);
             displayPlayer(playerTwo);
-            System.out.println();
 
             Game game = new Game(playerOne, playerTwo);
-            System.out.println(game.getBoard().render());
-            playGame(scanner, game);
+
+            while (true) {
+                SessionAction action = playGame(scanner, game);
+
+                switch (action) {
+                    case RESET:
+                        game.reset();
+                        System.out.printf(
+                                "%nThe board has been reset. %s (X) starts.%n",
+                                playerOne.getName());
+                        break;
+                    case NEW_GAME:
+                        System.out.println("\nStarting a game with new players.");
+                        continue playerSessions;
+                    case QUIT:
+                        return;
+                }
+            }
         }
     }
 
-    private static void playGame(Scanner scanner, Game game) {
+    private static SessionAction playGame(Scanner scanner, Game game) {
+        System.out.println();
+        System.out.println(game.getBoard().render());
+
         while (game.getStatus() == GameStatus.IN_PROGRESS && scanner.hasNextLine()) {
             Player currentPlayer = game.getCurrentPlayer();
             System.out.printf(
-                    "%n%s (%c), choose a position from 1 to 9: ",
+                    "%n%s (%c), choose 1-9 or enter R, N, or Q: ",
                     currentPlayer.getName(),
                     currentPlayer.getSymbol());
 
             String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("R")) {
+                return SessionAction.RESET;
+            }
+
+            if (input.equalsIgnoreCase("N")) {
+                return SessionAction.NEW_GAME;
+            }
+
+            if (input.equalsIgnoreCase("Q")) {
+                return SessionAction.QUIT;
+            }
+
             int position;
 
             try {
@@ -73,6 +138,36 @@ public class Main {
         } else if (game.getStatus() == GameStatus.DRAW) {
             System.out.println("\nThe game ended in a draw.");
         }
+
+        return readPostGameMenu(scanner);
+    }
+
+    private static SessionAction readPostGameMenu(Scanner scanner) {
+        while (scanner.hasNextLine()) {
+            System.out.println();
+            System.out.println("[R] Reset with the same players");
+            System.out.println("[N] New game with new players");
+            System.out.println("[Q] Quit");
+            System.out.print("Choose an option: ");
+
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("R")) {
+                return SessionAction.RESET;
+            }
+
+            if (input.equalsIgnoreCase("N")) {
+                return SessionAction.NEW_GAME;
+            }
+
+            if (input.equalsIgnoreCase("Q")) {
+                return SessionAction.QUIT;
+            }
+
+            System.out.println("Enter R to reset, N for new players, or Q to quit.");
+        }
+
+        return SessionAction.QUIT;
     }
 
     private static Player registerPlayer(
