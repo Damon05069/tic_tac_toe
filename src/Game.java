@@ -39,6 +39,11 @@ public final class Game {
             return MoveResult.SUCCESS;
         }
 
+        if (board.isFull()) {
+            status = GameStatus.DRAW;
+            return MoveResult.SUCCESS;
+        }
+
         switchCurrentPlayer();
         return MoveResult.SUCCESS;
     }

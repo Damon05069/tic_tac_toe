@@ -52,6 +52,16 @@ public final class Board {
         return false;
     }
 
+    public boolean isFull() {
+        for (char cell : cells) {
+            if (cell == EMPTY) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public String render() {
         StringBuilder board = new StringBuilder();
         String lineSeparator = System.lineSeparator();

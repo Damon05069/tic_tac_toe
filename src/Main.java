@@ -70,6 +70,8 @@ public class Main {
                     "%n%s (%c) wins!%n",
                     winner.getName(),
                     winner.getSymbol());
+        } else if (game.getStatus() == GameStatus.DRAW) {
+            System.out.println("\nThe game ended in a draw.");
         }
     }
 
