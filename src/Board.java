@@ -2,6 +2,8 @@ public final class Board {
     private static final int SIZE = 3;
     private static final char EMPTY = '\0';
     private static final int FIRST_POSITION = 1;
+    private static final String SPACER_ROW = "     |     |     ";
+    private static final String DIVIDER_ROW = "_____|_____|_____";
 
     private final char[] cells = new char[SIZE * SIZE];
 
@@ -26,21 +28,28 @@ public final class Board {
 
     public String render() {
         StringBuilder board = new StringBuilder();
+        String lineSeparator = System.lineSeparator();
 
-        for (int index = 0; index < cells.length; index++) {
-            board.append(' ')
-                    .append(cellContent(index))
-                    .append(' ');
+        for (int row = 0; row < SIZE; row++) {
+            board.append(SPACER_ROW).append(lineSeparator);
 
-            boolean endOfRow = (index + 1) % SIZE == 0;
-            boolean finalCell = index == cells.length - 1;
+            for (int column = 0; column < SIZE; column++) {
+                int index = row * SIZE + column;
+                board.append("  ")
+                        .append(cellContent(index))
+                        .append("  ");
 
-            if (!endOfRow) {
-                board.append('|');
-            } else if (!finalCell) {
-                board.append(System.lineSeparator())
-                        .append("---+---+---")
-                        .append(System.lineSeparator());
+                if (column < SIZE - 1) {
+                    board.append('|');
+                }
+            }
+
+            board.append(lineSeparator);
+
+            if (row < SIZE - 1) {
+                board.append(DIVIDER_ROW).append(lineSeparator);
+            } else {
+                board.append(SPACER_ROW);
             }
         }
 
