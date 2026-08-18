@@ -64,6 +64,13 @@ public final class Game {
         return winner;
     }
 
+    public void reset() {
+        board.reset();
+        currentPlayer = playerOne;
+        winner = null;
+        status = GameStatus.IN_PROGRESS;
+    }
+
     private void switchCurrentPlayer() {
         currentPlayer = currentPlayer == playerOne ? playerTwo : playerOne;
     }

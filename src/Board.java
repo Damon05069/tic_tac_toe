@@ -62,6 +62,12 @@ public final class Board {
         return true;
     }
 
+    public void reset() {
+        for (int index = 0; index < cells.length; index++) {
+            cells[index] = EMPTY;
+        }
+    }
+
     public String render() {
         StringBuilder board = new StringBuilder();
         String lineSeparator = System.lineSeparator();
