@@ -19,8 +19,29 @@ public class Main {
             displayPlayer(playerTwo);
             System.out.println();
 
-            Board board = new Board();
-            System.out.println(board.render());
+            Game game = new Game(playerOne, playerTwo);
+            System.out.println(game.getBoard().render());
+            playGame(scanner, game);
+        }
+    }
+
+    private static void playGame(Scanner scanner, Game game) {
+        while (game.getStatus() == GameStatus.IN_PROGRESS && scanner.hasNextLine()) {
+            Player currentPlayer = game.getCurrentPlayer();
+            System.out.printf(
+                    "%n%s (%c), choose a position from 1 to 9: ",
+                    currentPlayer.getName(),
+                    currentPlayer.getSymbol());
+
+            int position = Integer.parseInt(scanner.nextLine().trim());
+            MoveResult result = game.playMove(position);
+
+            if (result == MoveResult.SUCCESS) {
+                System.out.println();
+                System.out.println(game.getBoard().render());
+            } else {
+                System.out.println("That move could not be played. Try again.");
+            }
         }
     }
 
