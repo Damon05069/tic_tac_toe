@@ -63,6 +63,14 @@ public class Main {
                     break;
             }
         }
+
+        if (game.getStatus() == GameStatus.WIN) {
+            Player winner = game.getWinner();
+            System.out.printf(
+                    "%n%s (%c) wins!%n",
+                    winner.getName(),
+                    winner.getSymbol());
+        }
     }
 
     private static Player registerPlayer(

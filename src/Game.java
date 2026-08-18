@@ -6,6 +6,7 @@ public final class Game {
     private final Player playerTwo;
 
     private Player currentPlayer;
+    private Player winner;
     private GameStatus status;
 
     public Game(Player playerOne, Player playerTwo) {
@@ -13,6 +14,7 @@ public final class Game {
         this.playerTwo = Objects.requireNonNull(playerTwo, "Player two is required.");
         board = new Board();
         currentPlayer = playerOne;
+        winner = null;
         status = GameStatus.IN_PROGRESS;
     }
 
@@ -30,6 +32,13 @@ public final class Game {
         }
 
         board.placeMark(position, currentPlayer.getSymbol());
+
+        if (board.hasWinningLine(currentPlayer.getSymbol())) {
+            winner = currentPlayer;
+            status = GameStatus.WIN;
+            return MoveResult.SUCCESS;
+        }
+
         switchCurrentPlayer();
         return MoveResult.SUCCESS;
     }
@@ -44,6 +53,10 @@ public final class Game {
 
     public GameStatus getStatus() {
         return status;
+    }
+
+    public Player getWinner() {
+        return winner;
     }
 
     private void switchCurrentPlayer() {
