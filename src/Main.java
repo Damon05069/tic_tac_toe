@@ -33,14 +33,34 @@ public class Main {
                     currentPlayer.getName(),
                     currentPlayer.getSymbol());
 
-            int position = Integer.parseInt(scanner.nextLine().trim());
+            String input = scanner.nextLine().trim();
+            int position;
+
+            try {
+                position = Integer.parseInt(input);
+            } catch (NumberFormatException exception) {
+                System.out.println("Enter a whole number from 1 to 9.");
+                continue;
+            }
+
             MoveResult result = game.playMove(position);
 
-            if (result == MoveResult.SUCCESS) {
-                System.out.println();
-                System.out.println(game.getBoard().render());
-            } else {
-                System.out.println("That move could not be played. Try again.");
+            switch (result) {
+                case SUCCESS:
+                    System.out.println();
+                    System.out.println(game.getBoard().render());
+                    break;
+                case OCCUPIED:
+                    System.out.printf(
+                            "Position %d is already occupied. Choose another position.%n",
+                            position);
+                    break;
+                case OUT_OF_RANGE:
+                    System.out.println("Position must be between 1 and 9.");
+                    break;
+                case GAME_OVER:
+                    System.out.println("The game is already over.");
+                    break;
             }
         }
     }
