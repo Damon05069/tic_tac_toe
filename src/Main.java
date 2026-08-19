@@ -14,11 +14,15 @@ public class Main {
     }
 
     private static SessionAction readStartupMenu(Scanner scanner) {
-        while (scanner.hasNextLine()) {
+        while (true) {
             System.out.println();
             System.out.println("[N] Start a new game");
             System.out.println("[Q] Quit");
             System.out.print("Choose an option: ");
+
+            if (!scanner.hasNextLine()) {
+                return SessionAction.QUIT;
+            }
 
             String input = scanner.nextLine().trim();
 
@@ -32,8 +36,6 @@ public class Main {
 
             System.out.println("Enter N to start or Q to quit.");
         }
-
-        return SessionAction.QUIT;
     }
 
     private static void runGameSessions(Scanner scanner) {
@@ -78,12 +80,16 @@ public class Main {
         System.out.println();
         System.out.println(game.getBoard().render());
 
-        while (game.getStatus() == GameStatus.IN_PROGRESS && scanner.hasNextLine()) {
+        while (game.getStatus() == GameStatus.IN_PROGRESS) {
             Player currentPlayer = game.getCurrentPlayer();
             System.out.printf(
                     "%n%s (%c), choose 1-9 or enter R, N, or Q: ",
                     currentPlayer.getName(),
                     currentPlayer.getSymbol());
+
+            if (!scanner.hasNextLine()) {
+                return SessionAction.QUIT;
+            }
 
             String input = scanner.nextLine().trim();
 
@@ -143,12 +149,16 @@ public class Main {
     }
 
     private static SessionAction readPostGameMenu(Scanner scanner) {
-        while (scanner.hasNextLine()) {
+        while (true) {
             System.out.println();
             System.out.println("[R] Reset with the same players");
             System.out.println("[N] New game with new players");
             System.out.println("[Q] Quit");
             System.out.print("Choose an option: ");
+
+            if (!scanner.hasNextLine()) {
+                return SessionAction.QUIT;
+            }
 
             String input = scanner.nextLine().trim();
 
@@ -166,8 +176,6 @@ public class Main {
 
             System.out.println("Enter R to reset, N for new players, or Q to quit.");
         }
-
-        return SessionAction.QUIT;
     }
 
     private static Player registerPlayer(
