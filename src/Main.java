@@ -4,10 +4,36 @@ public class Main {
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
             System.out.println("TIC-TAC-TOE");
-            runGameSessions(scanner);
+
+            if (readStartupMenu(scanner) == SessionAction.NEW_GAME) {
+                runGameSessions(scanner);
+            }
 
             System.out.println("Thanks for playing!");
         }
+    }
+
+    private static SessionAction readStartupMenu(Scanner scanner) {
+        while (scanner.hasNextLine()) {
+            System.out.println();
+            System.out.println("[N] Start a new game");
+            System.out.println("[Q] Quit");
+            System.out.print("Choose an option: ");
+
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("N")) {
+                return SessionAction.NEW_GAME;
+            }
+
+            if (input.equalsIgnoreCase("Q")) {
+                return SessionAction.QUIT;
+            }
+
+            System.out.println("Enter N to start or Q to quit.");
+        }
+
+        return SessionAction.QUIT;
     }
 
     private static void runGameSessions(Scanner scanner) {
